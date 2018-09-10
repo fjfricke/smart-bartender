@@ -2,9 +2,9 @@
 
 {% block content %}
 
-<div class="container" id="detailView">
+<div class="container">
 	  <div class="row">
-		  <div class="col s12">
+		  <div class="col s12">{#
 			  <div class="row">
                   <h3 class="header">Swap bottle</h3>
                   <form action="/tools/swap" enctype="multipart/form-data" method="post">
@@ -25,9 +25,45 @@
 
 			  </div>
 		  </div>
-
+#}
   		</div>
+
+        <div class="row">
+            <div class="col s12">
+                <h3 class="header">Swap bottle</h3>
+            </div>
+            <div class="collection">
+                {% for ingredient in ingredients %}
+                <a href="#modal{{ loop.index }}" class="collection-item black-text modal-trigger">
+                    <span class="badge">
+                        <div class="progress">
+                            <div id="makeprogress" class="determinate black" style="width: {{ ingredient.remaining / ingredient.bottlesize * 100 }}%"></div>
+                        </div>
+                    </span>
+                    <span class="badge">
+                        {{ ingredient.remaining|round|int }} ml of {{ ingredient.bottlesize|round|int }} ml left
+                    </span>
+
+                {{ ingredient.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
   </div>
+
+    <!-- Modal Structure -->
+    {% for ingredient in ingredients %}
+  <div id="modal{{ loop.index }}" class="modal">
+    <div class="modal-content">
+      <h4>Swap {{ ingredient.name }}</h4>
+      <p>Do you want to swap {{ ingredient.name }}?</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Dismiss</a>
+      <a href="tools/swap?iding={{ loop.index-1 }}" class="modal-close waves-effect waves-green btn-flat">Swap bottle</a>
+    </div>
+  </div>
+    {% endfor %}
 
 {% endblock content%}
 
@@ -35,8 +71,11 @@
 <script>
 
     $(document).ready(function(){
-        var toast = '{{toast}}';
-        if (toast) M.toast({html: toast});
+        $('.modal').modal();
+        let toast = '{{toast}}';
+        if (toast){
+            if(toast != "None") M.toast({html: toast});
+        }
     $('select').formSelect();
   });
 

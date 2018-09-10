@@ -1,6 +1,7 @@
 import time
 import sys
-import RPi.GPIO as GPIO
+#import RPi.GPIO as GPIO
+from RPi import GPIO
 import json
 from threading import Thread
 import traceback

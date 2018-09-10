@@ -74,8 +74,8 @@ bar.create_drink(name="Milch 43", type='Longdrink', picture='milch43.png', descr
 bar.drinks[3].create_version(shortname='single', ingredients=[bar.ingredients[5], bar.ingredients[6]], proportions=[30,70], glassize=200)
 
 bar.save_config('config')
-
 '''
+
 '''BARTENDER2 SECTION END'''
 
 bar = reload_config('config')
@@ -349,19 +349,27 @@ def submitDeleteVersion():
 
 @app.route("/swapping")
 def swapView(toast=""):
+    if request.method == 'GET':
+        toast = request.args.get('toast')
     return render_template('/swapping.html', toast=toast, ingredients=bar.ingredients)
 
-@app.route("/tools/swap", methods=['POST'])
+@app.route("/tools/swap", methods=['GET','POST'])
 def swapAction():
     try:
-        iding = request.form.get('iding')
+        iding = "";
+        if request.method == 'POST':
+            iding = request.form.get('iding')
+        else:
+            iding = request.args.get('iding')
 
         if iding == "":
             raise Exception()
+
         iding = int(iding)
 
         bar.ingredients[iding].swapBottle()
         bar.save_config('config')
+        return redirect(url_for('swapView', toast='Bottle refilled.'))
         return swapView('Bottle refilled.')
     except:
         return swapView('Something went wrong..')
@@ -414,6 +422,7 @@ def startChrome():
     driver.get("http://127.0.0.1:5000")
 
 if __name__ == "__main__":
-    t = Thread(target=startChrome
+    t = Thread(target=startChrome)
     t.start()
     app.run(debug=False)
+    #app.run(host='192.168.0.77', port=5000, debug=False)
