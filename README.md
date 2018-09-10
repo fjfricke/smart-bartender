@@ -1,7 +1,7 @@
 # smart-bartender
 This is a Raspberry Pi smart bartender
 
-## installation
+## Installation
 
 * create a virtual environment on your raspberry pi
 * copy all data in the virtual environment folder
