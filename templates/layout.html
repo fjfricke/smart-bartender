@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Smart Bartender - V0.2</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  -->
+  <link href="{{ url_for('static', filename='css/materialize.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{{ url_for('static', filename='css/style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{{ url_for('static', filename='css/nouislider.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+
+  <nav class="black lighten-1" role="navigation">
+    <ul id="dropdown1" class="dropdown-content">
+        <li><a href="/ingredients">Bottles</a></li>
+        <li><a href="/pumps">Pumps</a></li>
+        <li><a href="/drinks">Drinks</a></li>
+    </ul>
+    <ul id="dropdown2" class="dropdown-content">
+        <li><a href="/cleaning">Clean Device</a></li>
+        <li><a href="/swapping">Swap Bottles</a></li>
+    </ul>
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">baR2D2 V0.2</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/">Home</a></li>
+        <li><a class="dropdown-trigger" href="#!" data-target="dropdown2">Tools<i class="material-icons right">arrow_drop_down</i></a></li>
+        <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Settings<i class="material-icons right">arrow_drop_down</i></a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="sidenav">
+        <li><a href="/">Home</a></li>
+        <li><a class="collapsible-header waves-effect waves-teal">Tools</a>
+              <div class="collapsible-body" style="display: block;">
+                  <ul>
+                      <li><a href="/cleaning">Clean Device</a></li>
+                      <li><a href="/swapping">Swap Bottles</a></li>
+                  </ul>
+              </div>
+        </li>
+        <li><a class="collapsible-header waves-effect waves-teal">Settings</a>
+              <div class="collapsible-body" style="display: block;">
+                  <ul>
+                    <li><a href="/ingredients">Bottles</a></li>
+                    <li><a href="/pumps">Pumps</a></li>
+                    <li><a href="/drinks">Drinks</a></li>
+                  </ul>
+              </div>
+        </li>
+      </ul>
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+<!--
+
+<nav>
+  <div class="nav-wrapper">
+    <a href="#!" class="brand-logo">Logo</a>
+    <ul class="right hide-on-med-and-down">
+      <li><a href="sass.html">Sass</a></li>
+      <li><a href="badges.html">Components</a></li>
+
+      <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">Dropdown<i class="material-icons right">arrow_drop_down</i></a></li>
+    </ul>
+  </div>
+</nav>
+-->
+  <br><br>
+  {% block content %}
+  {% endblock content%}
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery-parent-to-animate.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/nouislider.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery.redirect.js') }}"></script>
+  <!--<script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+  <script src="js/jquery-parent-to-animate.js"></script> -->
+  {% block scripts%}
+  {% endblock scripts%}
+  <script>
+      $(".dropdown-trigger").dropdown();
+  </script>
+
+  </body>
+</html>

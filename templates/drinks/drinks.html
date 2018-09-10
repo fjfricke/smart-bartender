@@ -1,0 +1,120 @@
+<link href="{{ url_for('static', filename='css/cropper/jquery.Jcrop.css') }}" type="text/css" rel="stylesheet"/>
+
+{% extends "layout.html" %}
+
+
+{% block content %}
+<div class="container" id="detailView">
+	  <div class="row">
+		  <div class="col s12">
+			  <div class="row">
+                  <h4 class="header"> Add image</h4>
+                  <div id="cropDiv"></div>
+              </div>
+              <div class="row">
+                 <h4 class="header"> Add new drink</h4>
+                  <form action="/submit/newDrink" enctype="multipart/form-data" method="post">
+					  <div class="row">
+						  <div class="input-field col s6">
+							  <input placeholder="Wodka Mule" id="newName" name="name" type="text">
+							  <label for="newName">Name</label>
+						  </div>
+                          <div class="input-field col s6">
+                            <input placeholder="Longdrink" id="newType" name="type" type="text">
+							  <label for="newType">Type</label>
+                          </div>
+                          <div class="input-field col s12">
+                            <input placeholder="This is a drink from Moscow." id="newDesc" name="desc" type="text">
+							  <label for="newDesc">Description</label>
+                          </div>
+                          <div class="input-field col s6">
+                            <select id="newPic" name="picture">
+                                <option value="" selected>No picture assigned</option>
+                                {% for picture in pictures %}
+                                <option value="{{picture}}">{{picture}}</option>
+                                {% endfor %}
+                            </select>
+                              <label>Picture</label>
+                          </div>
+					  </div>
+                      <button class="btn waves-effect waves-light black" id="submitNew" name="action">Save
+                          <i class="material-icons right">save</i>
+                      </button>
+                  </form>
+
+                  <h3 class="header">Edit existing drink</h3>
+                  <form>
+                      <div class="row">
+                          <div class="input-field col s6">
+                            <select id="chooseDrink">
+                                <option value="" disabled selected>Select Drink</option>
+                                {% for drink in drinks %}
+                                <option value="{{loop.index-1}}">{{drink.name}}</option>
+                                {% endfor %}
+                            </select>
+                          </div>
+                      </div>
+                  </form>
+
+                  <div id="changeDrinkForm"></div>
+
+                  <form action="/submit/deleteDrink" enctype="multipart/form-data" method="post">
+                  <h3 class="header">Delete existing drink</h3>
+                  <h7 class="grey-text">Delete drink with all versions.</h7>
+                  <form>
+                      <div class="row">
+                          <div class="input-field col s6">
+                            <select id="deleteDrink" name="iddrink">
+                                <option value="" disabled selected>Select Bottle</option>
+                                {% for drink in drinks%}
+                                <option value="{{loop.index-1}}">{{drink.name}}</option>
+                                {% endfor %}
+                            </select>
+                          </div>
+                      </div>
+                      <button class="btn waves-effect waves-light black" id="submitDelete" name="action">Delete
+                          <i class="material-icons right">delete</i>
+                      </button>
+                  </form>
+              </div>
+          </div>
+      </div>
+</div>
+
+{% endblock content%}
+
+{% block scripts%}
+
+<script src="{{ url_for('static', filename='js/cropper/jquery.Jcrop.min.js') }}"></script>
+
+<script>
+
+    $("#chooseDrink").change(function(){
+
+        var iddrink = $('#chooseDrink').find(":selected").val();
+        $( "#changeDrinkForm" ).load( "/drinks/changeDrinkForm",{
+            iddrink: iddrink
+        } );
+    });
+
+    $(document).ready(function(){
+        $('select').formSelect();
+        var toast = '{{toast}}';
+        if (toast) M.toast({html: toast});
+    });
+
+    $(window).load(function(){
+        if ("{{path}}" == "") {
+            $("#cropDiv").load("/drinks/chooseImage");
+        }
+        else{
+            var path = "{{path}}"
+            $( "#cropDiv" ).load("/drinks/cropImage",{
+                path: path
+            });
+        }
+    });
+
+</script>
+
+{% endblock scripts %}

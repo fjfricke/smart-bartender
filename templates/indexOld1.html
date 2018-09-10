@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+  <title>Starter Template - Materialize</title>
+
+  <!-- CSS  -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--
+  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  -->
+  <link href="{{ url_for('static', filename='css/materialize.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link href="{{ url_for('static', filename='css/style.css') }}" type="text/css" rel="stylesheet" media="screen,projection"/>
+</head>
+<body>
+  <nav class="black lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="#">Navbar Link</a></li>
+      </ul>
+
+      <ul id="nav-mobile" class="sidenav">
+        <li><a href="#">Navbar Link</a></li>
+      </ul>
+      <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+  </nav>
+  <br><br>
+  <div class="container" hidden="true" id="detailView">
+	  <div class="row">
+		  <div class="col s6" id="itemPicLarge">
+			  <img class="responsive-img" src="{{ url_for('static', filename='pictures/1.png') }}">
+		  </div>
+		  <div class="col s6">
+			  <div class="card">
+			  	<div class="card-content">
+			  		<span class="card-title">Moscow Mule</span>
+			  		<a class="btn-floating btn-large halfway-fab waves-effect waves-light red"><i class="material-icons">play_arrow</i></a>
+        		</div>
+				<div class="card-content">
+					<p>This is a drink from Moscow. </p>
+					<br><br>
+					<table>
+					<thead>
+					<tr>
+					<th>Drink</th>
+					<th>Alcohol</th>
+					<th>Proportion</th>
+          			</tr>
+        			</thead>
+
+					<tbody>
+					<tr>
+					<td>Wodka</td>
+					<td>45%</td>
+					<td>40%</td>
+          			</tr>
+		  			<tr>
+		  			<td>Ginger Beer</td>
+		  			<td>0%</td>
+		  			<td>60%</td>
+          			</tr>
+        			</tbody>
+      				</table>
+        		</div>
+        		<form class="center-align" action="#">
+					<label>
+						<input name="group1" type="radio" checked />
+						<span>single</span>
+					</label>
+					<label>
+						<input name="group1" type="radio" />
+						<span>double</span>
+					</label>
+					<label>
+						<input name="group1" type="radio" />
+						<span>triple</span>
+					</label>
+    				<br><br>
+		  	  </div>
+	  	 </div>
+  		</div>
+  </div>
+
+
+  <!<div class="container">
+    <!<div class="section">
+
+      <!--   Icon Section   -->
+      <!<div class="row">
+        <div class="carousel">
+	        <div class="carousel-item" href="#one!">
+				<img id="itempic1" src="{{ url_for('static', filename='pictures/1.png') }}">
+				<p class="grey-text center">Moscow Mule</p>
+    		</div>
+			<div class="carousel-item" href="#two!">
+				<img src="{{ url_for('static', filename='pictures/1.png') }}">
+				<p class="grey-text center">Moscow Mule</p>
+    		</div>
+    		<div class="carousel-item" href="#three!">
+				<img src="{{ url_for('static', filename='pictures/1.png') }}">
+				<p class="grey-text center">Moscow Mule</p>
+    		</div>
+    		<div class="carousel-item" href="#four!">
+				<img src="{{ url_for('static', filename='pictures/1.png') }}">
+				<p class="grey-text center">Moscow Mule</p>
+    		</div>
+    		<div class="carousel-item" href="#five!">
+				<img src="{{ url_for('static', filename='pictures/1.png') }}">
+				<p class="grey-text center">Moscow Mule</p>
+    		</div>
+		</div>
+      <!</div>
+
+    <!</div>
+    <br><br>
+  <!</div>
+  
+ <div class="fixed-action-btn" id="listButton" hidden="true">
+  <a class="btn-floating btn-large waves-effect waves-light grey">
+    <i class="large material-icons">view_list</i>
+  </a>
+</div>
+
+  <!--  Scripts-->
+  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/init.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery-parent-to-animate.js') }}"></script>
+  <!--<script src="js/materialize.js"></script>
+  <script src="js/init.js"></script>
+  <script src="js/jquery-parent-to-animate.js"></script> -->
+  <script>
+	  $(document).ready(function(){
+    $('.carousel').carousel({
+	    dist: 0,
+	    shift: 0,
+	    padding: 150
+    });
+  });
+  /*
+  $("#itempic1").click(function(){
+    var $this = $(this);
+    var pos = $this.position();
+    
+    $this.add($this.find("img"))
+        .animate({top: 0, left: 0, width: 0, height: 0},1000,function(){
+             $this.hide();
+        }); 
+});
+	$("#itempic1").click(function(){
+		$('.i1').parentToAnimate($('#itempicLarge'), 'slow');
+	})
+	*/
+	/*
+	$("#itempic1").click(function(){
+		var des = $("#itempicLarge");
+		var el = $(this);
+		var formerPos = el.position;
+		el.removeAttr('style').css("position","relative");
+		//el.css("position", "absolute");
+		//el.css("overflow", "visible");
+		el.parent().siblings().hide();
+		el.siblings().hide();
+el.css({left:formerPos.left,top:formerPos.top});
+		el.appendTo("body");
+		
+		//$("#detailView").show();
+		el.animate({
+			top: des.position.top,
+			right: des.position.right,
+			width: el.width(),
+			heigth: el.height()},
+			2000,undefined,
+			function(){
+				el.remove().appendTo("#itempicLarge").css("position", "static");
+		})
+		
+	});*/
+	$("#itempic1").click(function(){
+		var el = $(this);
+		el.parent().parent().hide();
+		$("#detailView").show();
+		$("#listButton").show();
+	});
+	$("#listButton").click(function(){
+		$(".carousel").show();
+		$("#detailView").hide();
+		$("#listButton").hide();
+	});
+
+  </script>
+  
+
+  </body>
+</html>

@@ -1,0 +1,45 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container" id="detailView">
+	  <div class="row">
+		  <div class="col s12">
+			  <div class="row">
+                  <h3 class="header">Clean pump</h3>
+                  <form action="/tools/clean" enctype="multipart/form-data" method="post">
+                      <div class="row">
+                          <div class="input-field col s6">
+                            <select name="iding">
+                                <option value="" disabled selected>Select Pump to clean</option>
+                                {% for pump in pumps %}
+                                <option value="{{loop.index-1}}">Pump {{loop.index}}, GPIO:{{pump.pin}}</option>
+                                {% endfor %}
+                            </select>
+                          </div>
+                      </div>
+                      <button class="btn waves-effect waves-light black" id="submit" name="action">Clean
+                          <i class="material-icons right">local_drink</i>
+                      </button>
+                  </form>
+
+			  </div>
+		  </div>
+
+  		</div>
+  </div>
+
+{% endblock content%}
+
+{% block scripts%}
+<script>
+
+    $(document).ready(function(){
+        var toast = '{{toast}}';
+        if (toast) M.toast({html: toast});
+    $('select').formSelect();
+  });
+
+</script>
+
+{% endblock scripts %}

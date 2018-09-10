@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container" id="detailView">
+	  <div class="row">
+		  <div class="col s6" id="itemPicLarge">
+			  <img class="responsive-img" src="{{ url_for('static', filename='pictures/{}'.format(drink.picture)) }}">
+		  </div>
+		  <div class="col s6">
+			  <div class="card">
+			  	<div class="card-content">
+			  		<span class="card-title">{{drink.name}}</span>
+			  		<a id="playbutton" class="btn-floating btn-large halfway-fab waves-effect waves-light red"><i class="material-icons">play_arrow</i></a>
+        		</div>
+				<div class="card-content">
+					<p>{{drink.description}}</p>
+					<br><br>
+					<table>
+					<thead>
+					<tr>
+					<th>Drink</th>
+					<th>Alcohol</th>
+					<th>Proportion</th>
+          			</tr>
+        			</thead>
+				 {% set att = namespace(selectedElem=-1)%}
+                 {% for version in drink.versions%}
+					<tbody class="versiondetail" id="versiondetail {{loop.index-1}}" {% if att.selectedElem >= 0 or (version.available == False and att.selectedElem < 0) %} hidden="true" {% else %} {% set att.selectedElem = loop.index-1 %} {% endif%}>
+                    {% for ingredient in version.ingredients %}
+					<tr>
+					<td>{{ingredient.name}}</td>
+					<td>{{ingredient.percentage}}</td>
+					<td>{{version.proportions[loop.index-1]}}</td>
+          			</tr>
+		  			{% endfor %}
+        			</tbody>
+                 {% endfor %}
+      				</table>
+        		</div>
+        		<form class="center-align" action="#">
+                    {% for version in drink.versions %}
+					<label>
+						<input class="radioversion" name="group1" id="radio {{loop.index-1}}" type="radio" {% if loop.index-1 == att.selectedElem %} checked {% endif %} {% if not version.available %} disabled="disabled" {% endif %} />
+						<span>{{version.shortname}}</span>
+					</label>
+                    {% endfor %}
+    				<br><br>
+		  	  </div>
+	  	 </div>
+  		</div>
+  </div>
+
+<div class="fixed-action-btn" id="listButton">
+  <a class="btn-floating btn-large waves-effect waves-light grey">
+    <i class="large material-icons">view_list</i>
+  </a>
+</div>
+
+{% endblock content%}
+
+{% block scripts%}
+<script>
+
+	function sleep(ms) {
+	    return new Promise(resolve => setTimeout(resolve, ms));
+	}
+	
+	function updateProgress(progress, duration) {
+	    //alert(progress);
+		if (progress >= duration){
+		    window.location.href = "/";
+		    return;
+		}
+		//alert(document.getElementById("makeprogress").style.width);
+		document.getElementById("makeprogress").style.width = progress/duration * 100 + "%";
+	    setTimeout(updateProgress, 100, progress+0.1, duration);
+    }
+
+	var toastprogress = '<span>Youre {{drink.name}} is being prepared...<div class="progress">\n' +
+        '      <div id="makeprogress" class="determinate" style="width: 0%"></div>\n' +
+        '  </div>';
+
+$("input.radioversion").click(function () {
+    var checkedid = document.querySelector('input[class="radioversion"]:checked').id;
+    //alert(checkedid);
+    checkedid = checkedid.split(/[ ,]+/)[1];
+    //alert(checkedid);
+    var elems = document.getElementsByClassName("versiondetail");
+    for (var i = 0; i < elems.length; i++) {
+        elems[i].hidden="true";
+    }
+    document.getElementById("versiondetail " + checkedid).hidden = false;
+});
+
+var playClicked = false;
+
+$("#playbutton").click(function () {
+	if (playClicked) return;
+	playClicked = true;
+    var idversion = document.querySelector('input[class="radioversion"]:checked').id;
+    var iddrink = {{iddrink}};
+    idversion = idversion.split(/[ ,]+/)[1];
+    //window.location.href = "/make?iddrink=" + iddrink + "&idversion=" + idversion;
+
+	duration = 0.0;
+    $.post('/make', {
+                iddrink: iddrink,
+                idversion: idversion
+            }).done(function(response) {
+        //$(destElem).text(response['text'])
+        duration = response['text'];
+        M.toast({html: toastprogress, displayLength: 1000000});
+        updateProgress(0,duration);
+    });
+});
+$("#listButton").click(function () {
+    if (playClicked) return;
+	window.location.href = "/";
+})
+
+</script>
+{% endblock scripts %}

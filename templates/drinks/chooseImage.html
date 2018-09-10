@@ -1,0 +1,24 @@
+    <div class="row">
+        <div class="col s6">
+            <div>
+              <img width="300" class="materialboxed" id="image" src="{{ url_for('static', filename='pictures/placeholder.png') }}">
+            </div>
+          </div>
+        <div class="col s6">
+          <h4 class="header">Upload Image</h4>
+            <form action="/drinks/cropImage" enctype="multipart/form-data" method="post">
+                <div class="file-field input-field">
+                    <div class="btn black">
+                        <span>File</span>
+                        <input type="file" name="file">
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text">
+                    </div>
+                </div>
+                <button class="btn waves-effect waves-light black" type="submit">Choose
+                    <i class="material-icons right">send</i>
+                </button>
+            </form>
+        </div>
+    </div>

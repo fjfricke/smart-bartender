@@ -1,0 +1,89 @@
+<link href="{{ url_for('static', filename='css/cropper/jquery.Jcrop.css') }}" type="text/css" rel="stylesheet"/>
+
+{% extends "layout.html" %}
+
+
+{% block content %}
+<div class="container">
+	  <div class="row">
+        <div class="col s8">
+            <div>
+              <img class="jcrop-dark" width="500" id="image" src="{{ url_for('static', filename='pictures/ginTonic.png') }}">
+            </div>
+          </div>
+        <div class="col s4">
+          <h4 class="header">Image Cropping</h4>
+          <h7 class="grey-text">Select area of the picture you want to keep.</h7>
+            <br><br>
+          <button class="btn waves-effect waves-light" id="cropButton" name="action">Crop
+              <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </div>
+</div>
+
+{% endblock content%}
+
+{% block scripts%}
+
+<script src="{{ url_for('static', filename='js/cropper/jquery.Jcrop.min.js') }}"></script>
+
+<script>
+
+    var jcrop_api;
+
+    img = document.getElementById("image");
+
+    $(window).load(function() {
+        //alert(img.naturalWidth);
+        //alert(img.naturalHeight);
+        jcrop_api = $.Jcrop('#image',{
+            trueSize: [img.naturalWidth,img.naturalHeight],
+            aspectRatio: 1/1,
+            onSelect: updateCoords,
+            bgColor:     'white'
+        });
+    });
+
+    /*img.onload=function(){
+        //alert(img.naturalWidth);
+        //alert(img.naturalHeight);
+        $.Jcrop('#cropbox',{ trueSize: [img.naturalWidth,img.naturalHeight] });
+    }*/
+
+
+
+    var coords = [];
+
+    function updateCoords(c)
+			{
+			    //alert("running");
+				$('#x').val(c.x);
+				$('#y').val(c.y);
+				$('#x2').val(c.x2);
+				$('#y2').val(c.y2);
+				$('#w').val(c.w);
+
+				coords = [c.x, c.y, c.x2, c.y2, c.w];
+			};
+
+    $("#cropButton").click(function(){
+        if (coords.length == 0) {
+            M.toast({html: "Select an area to cut out."});
+            return;
+        }
+        //alert(coords);
+        $.post('/crop', {
+                x: coords[0],
+                y: coords[1],
+                x2: coords[2],
+                y2: coords[3],
+                w: coords[4],
+                name: "cropped.png"
+            }).done(function(response) {
+            if (response['error'] == 0) M.toast({html: "Successfully cropped."});
+        });
+    });
+</script>
+
+{% endblock scripts %}

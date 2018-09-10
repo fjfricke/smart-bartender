@@ -1,0 +1,137 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container" id="detailView">
+	  <div class="row">
+		  <div class="col s12">
+			  <div class="row">
+				  <h3 class="header">Add a new pump</h3>
+				  <form>
+					  <div class="row">
+						  <div class="input-field col s6">
+							  <input placeholder="GPIO Pin" id="newPin" type="number" class="validate">
+							  <label for="newPin">GPIO Pin</label>
+						  </div>
+                      </div>
+                      <div class="row">
+                          <div class="col s12">
+					        <label for="flowrate">Flowrate (ml/min)</label>
+					        <p id="flowrate"></p>
+                          </div>
+                      </div>
+                  </form>
+                      <button class="btn waves-effect waves-light black" id="submitNew" name="action">Save
+                          <i class="material-icons right">save</i>
+                      </button>
+
+                  <h3 class="header">Change existing pump pin</h3>
+                  <form>
+                      <div class="row">
+                          <div class="input-field col s6">
+                            <select id="choosePump">
+                                <option value="" disabled selected>Select Pump</option>
+                                {% for pump in pumps %}
+                                <option value="{{loop.index-1}}">Pump {{loop.index}}, GPIO:{{pump.pin}}</option>
+                                {% endfor %}
+                            </select>
+                          </div>
+                      </div>
+                  </form>
+
+                  <div id="changePumpForm"></div>
+                  <!--<form id="changeBottleForm"></form>-->
+
+                  <h3 class="header">Delete existing Pump</h3>
+                  <h7 class="grey-text">Only possible for pumps not assigned to any bottles.</h7>
+                  <form>
+                      <div class="row">
+                          <div class="input-field col s6">
+                            <select id="deletePump">
+                                <option value="" disabled selected>Select Pump</option>
+                                {% for pump in pumps%}
+                                <option value="{{loop.index-1}}" {% if not bar.pos_delete_pump(pump) %}disabled{% endif %}>Pump {{loop.index}}</option>
+                                {% endfor %}
+                            </select>
+                          </div>
+                      </div>
+                  </form>
+                      <button class="btn waves-effect waves-light black" id="submitDelete" name="action">Delete
+                          <i class="material-icons right">delete</i>
+                      </button>
+
+			  </div>
+		  </div>
+
+  		</div>
+  </div>
+
+{% endblock content%}
+
+{% block scripts%}
+<script>
+
+    $(document).ready(function(){
+        var toast = '{{toast}}';
+        if (toast) M.toast({html: toast});
+    $('select').formSelect();
+  });
+
+    $("#choosePump").change(function(){
+
+        var idpump = $('#choosePump').find(":selected").val();
+        $( "#changePumpForm" ).load( "/pumps/changePumpForm",{
+            idpump: idpump
+        } );
+    });
+
+    $("#submitNew").click(function() {
+
+        var pin = $("#newPin").val();
+        var flowrate = flowrate_slider.noUiSlider.get();
+        //alert(name + " " + pump + " " + percentage + " " + bottlesize);
+        $.post('/submit/newPump', {
+                pin: pin,
+                flowrate: flowrate
+            }).done(function(response) {
+            //$(destElem).text(response['text'])
+            if (response['error'] == '0') {
+                //M.toast({html: 'Created new bottle!'});
+                $.redirect('/pumps', {'toast': 'Created new pump!'});
+            }
+            else M.toast({html: 'Something went wrong..'});
+        });
+    });
+
+    $("#submitDelete").click(function() {
+        var idpump = $("#deletePump").val();
+        $.post('/submit/deletePump', {
+                idpump: idpump
+            }).done(function(response) {
+            if (response['error'] == '0') {
+                //M.toast({html: 'Created new bottle!'});
+                $.redirect('/pumps', {'toast': 'Deleted pump!'});
+            }
+            else M.toast({html: 'Something went wrong..'});
+        });
+    });
+
+
+var flowrate_slider = document.getElementById('flowrate');
+  noUiSlider.create(flowrate_slider, {
+   start: 500,
+   connect: true,
+   step: 10,
+   orientation: 'horizontal', // 'horizontal' or 'vertical'
+   range: {
+     'min': 0,
+     'max': 1000
+   },
+   format: wNumb({
+     decimals: 0
+   })
+  });
+
+</script>
+
+{% endblock scripts %}

@@ -1,0 +1,57 @@
+
+                    <form>
+                        <div class="row">
+						  <div class="input-field col s6">
+							  <input value="{{pump.pin}}" id="changePin" type="text">
+							  <label class="active" for="changeName">GPIO Pin</label>
+						  </div>
+					  </div>
+                      <div class="row">
+                          <div class="col s12">
+					        <label for="flowrateChange">Flowrate (ml/min)</label>
+					        <p id="flowrateChange"></p>
+                          </div>
+                      </div>
+                    </form>
+                      <button class="btn waves-effect waves-light black" type="submit" id="submitChange" name="action">Save
+                          <i class="material-icons right">save</i>
+                      </button>
+
+                      <script>
+                          $(document).ready(function(){
+                            $('select').formSelect();
+                          });
+
+                          $("#submitChange").click(function() {
+                              var idpump = {{idpump}};
+                              var pin = $("#changePin").val();
+                              var flowrate = flowrateChange_slider.noUiSlider.get();
+                              $.post('/submit/changePump', {
+                                  idpump: idpump,
+                                  pin: pin,
+                                  flowrate: flowrate
+                              }).done(function(response) {
+                                  if (response['error'] == '0') {
+                                      //M.toast({html: 'Created new bottle!'});
+                                      $.redirect('/pumps', {'toast': 'Changed pump!'});
+                                  }
+                                  else M.toast({html: 'Something went wrong..'});
+                              });
+                          });
+
+                            var flowrateChange_slider = document.getElementById('flowrateChange');
+
+                            noUiSlider.create(flowrateChange_slider, {
+                               start: {{pump.flowrate}},
+                               connect: true,
+                               step: 10,
+                               orientation: 'horizontal', // 'horizontal' or 'vertical'
+                               range: {
+                                 'min': 0,
+                                 'max': 1000
+                               },
+                               format: wNumb({
+                                 decimals: 0
+                               })
+                            });
+                      </script>

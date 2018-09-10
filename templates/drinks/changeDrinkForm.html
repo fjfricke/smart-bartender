@@ -1,0 +1,146 @@
+
+                    <h5 class="header">Change drink details</h5>
+                    <form action="/submit/changeDrink" enctype="multipart/form-data" method="post">
+                        <input hidden="true" value="{{iddrink}}" name="iddrink">
+                        <div class="row">
+						  <div class="input-field col s6">
+							  <input id="changeName" name="name" value="{{drink.name}}" type="text">
+							  <label class="active" for="changeName">Name</label>
+						  </div>
+                          <div class="input-field col s6">
+                            <input id="changeType" name="type" value="{{drink.type}}" type="text">
+							  <label class="active" for="changeType">Type</label>
+                          </div>
+                          <div class="input-field col s12">
+                            <input id="changeDesc" name="desc" value="{{drink.description}}" type="text">
+							  <label class="active" for="changeDesc">Description</label>
+                          </div>
+                          <div class="input-field col s6">
+                            <select id="changePic" name="picture">
+                                {% for picture in pictures %}
+                                <option value="{{picture}}" {% if picture == drink.picture %}selected{% endif %}>{{picture}}</option>
+                                {% endfor %}
+                            </select>
+                              <label>Picture</label>
+                          </div>
+					  </div>
+                      <button class="btn waves-effect waves-light black" type="submit" id="submitChange" name="action">Save
+                          <i class="material-icons right">save</i>
+                      </button>
+                    </form>
+
+                    <h5 class="header">Add version to {{drink.name}}</h5>
+                    <form action="/submit/newVersion" enctype="multipart/form-data" method="post">
+                      <input hidden="true" value="{{iddrink}}" name="iddrink">
+					  <div class="row" id="addIngNewForm">
+						  <div class="input-field col s6">
+							  <input placeholder="e.g. single, double, shot" id="newShortname" name="shortname" type="text" data-length="10">
+							  <label class="active" for="newShortname">Abbreviation</label>
+						  </div>
+                          <div class="input-field col s6">
+                            <input placeholder="200" id="newSize" name="size" type="number">
+							  <label class="active" for="newSize">Glas size (ml)</label>
+                          </div>
+                          <div class="input-field col s6">
+                            <select name="ing[]">
+                                <option value="" selected>No bottle assigned</option>
+                                {% for ingredient in bar.ingredients %}
+                                <option value="{{loop.index-1}}">{{ingredient.name}}</option>
+                                {% endfor %}
+                            </select>
+                              <label>Bottle</label>
+                          </div>
+                          <div class="input-field col s6">
+                            <input placeholder="20" name="prop[]" type="number">
+							  <label class="active">Proportion (%)</label>
+                          </div>
+					  </div>
+                      <a id="addIngNew" class="btn-floating btn-large waves-effect waves-light blue-grey"><i class="material-icons">add</i></a>
+                      <a id="delIngNew" class="btn-floating btn-large waves-effect waves-light blue-grey"><i class="material-icons">remove</i></a>
+                        <br><br>
+                      <button class="btn waves-effect waves-light black" id="submitNew" name="action">Save
+                          <i class="material-icons right">save</i>
+                      </button>
+                  </form>
+
+<!--
+                  <h5 class="header">Change existing {{drink.name}} versions</h5>
+                  <form>
+                      <div class="row">
+                          <div class="input-field col s6">
+                            <select id="chooseVersion">
+                                <option value="" disabled selected>Select Version</option>
+                                {% for version in drink.versions %}
+                                <option value="{{loop.index-1}}">{{version.shortname}}</option>
+                                {% endfor %}
+                            </select>
+                          </div>
+                      </div>
+                  </form>
+
+                  <div id="changeVersionForm"></div>
+-->
+                  <h5 class="header">Delete an existing {{drink.name}} version</h5>
+                  <form action="/submit/deleteVersion" enctype="multipart/form-data" method="post">
+                      <input hidden="true" value="{{iddrink}}" name="iddrink">
+                      <div class="row">
+                          <div class="input-field col s6">
+                            <select id="deleteVersion" name="idversion">
+                                <option value="" disabled selected>Select Version</option>
+                                {% for version in drink.versions%}
+                                <option value="{{loop.index-1}}">{{version.shortname}}</option>
+                                {% endfor %}
+                            </select>
+                          </div>
+                      </div>
+                      <button class="btn waves-effect waves-light black" id="submitDelete" name="action">Delete
+                          <i class="material-icons right">delete</i>
+                      </button>
+                  </form>
+
+                      <script>
+
+                          var addNewCounter = 0;
+                          $(function() {
+                              $("#addIngNew").click(function(e) {
+                                  e.preventDefault();
+
+                                  $("#addIngNewForm").append('<div class="addNew' + addNewCounter + ' input-field col s6">' +
+                                      '<select name="ing[]">' +
+                                      '<option value="" selected>No bottle assigned</option>' +
+                                      '{% for ingredient in bar.ingredients %}<option value="{{loop.index-1}}">{{ingredient.name}}</option>{% endfor %}' +
+                                      '</select>' +
+                                      '<label>Bottle</label>' +
+                                      '</div>');
+                                  $("#addIngNewForm").append('<div class="addNew' + addNewCounter + ' input-field col s6">' +
+                                      '<input placeholder="20" name="prop[]" type="number">' +
+                                      '<label class="active">Proportion (%)</label>' +
+                                      '</div>');
+                                  addNewCounter += 1;
+
+                                  $('select').formSelect();
+                              });
+                          });
+
+                          $(function() {
+                              $("#delIngNew").click(function(e) {
+                                  e.preventDefault();
+
+                                  if (addNewCounter == 0) return;
+
+                                  addNewCounter -= 1;
+
+                                  var toRemove = ".addNew" + addNewCounter;
+                                  //alert(toRemove);
+
+                                  $(toRemove).remove();
+
+
+                                  $('select').formSelect();
+                              });
+                          });
+
+                          $(document).ready(function(){
+                            $('select').formSelect();
+                          });
+                      </script>

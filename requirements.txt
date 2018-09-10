@@ -1,0 +1,4 @@
+RPi.GPIO
+Flask
+selenium
+Pillow

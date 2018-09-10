@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<!<div class="container">
+    <!<div class="section">
+
+      <!--   Icon Section   -->
+      <!<div class="row">
+        <div class="carousel bottom">
+
+            {% for drink in drinks %}
+
+	        <div class="carousel-item" href="#{{loop.index-1}}">
+				<img id="{{loop.index-1}}" class="itempic" src="{{ url_for('static', filename='pictures/{}'.format(drink.picture)) }}"
+                    {% if not drink.available %} style="filter: grayscale(100%) opacity(20%)" title="notavailable" {% endif %}>
+				<p class="grey-text center">{{drink.name}}</p>
+    		</div>
+
+            {% endfor %}
+		</div>
+      <!</div>
+
+    <!</div>
+    <br><br>
+  <!</div>
+
+{% endblock content %}
+
+{% block scripts%}
+<script>
+  $(document).ready(function(){
+    $('.carousel').carousel({
+	    dist: 0,
+	    shift: 0,
+	    padding: 150,
+        numVisible: 5
+    });
+  });
+  /*
+  $("#itempic1").click(function(){
+    var $this = $(this);
+    var pos = $this.position();
+
+    $this.add($this.find("img"))
+        .animate({top: 0, left: 0, width: 0, height: 0},1000,function(){
+             $this.hide();
+        });
+});
+	$("#itempic1").click(function(){
+		$('.i1').parentToAnimate($('#itempicLarge'), 'slow');
+	})
+	*/
+	/*
+	$("#itempic1").click(function(){
+		var des = $("#itempicLarge");
+		var el = $(this);
+		var formerPos = el.position;
+		el.removeAttr('style').css("position","relative");
+		//el.css("position", "absolute");
+		//el.css("overflow", "visible");
+		el.parent().siblings().hide();
+		el.siblings().hide();
+el.css({left:formerPos.left,top:formerPos.top});
+		el.appendTo("body");
+
+		//$("#detailView").show();
+		el.animate({
+			top: des.position.top,
+			right: des.position.right,
+			width: el.width(),
+			heigth: el.height()},
+			2000,undefined,
+			function(){
+				el.remove().appendTo("#itempicLarge").css("position", "static");
+		})
+
+	});*/
+
+    $(".itempic").click(function(){
+        var index = this.id;
+        if (this.title == "notavailable"){
+            M.toast({html: "This drink is not available. Please refill the ingredients."});
+        }
+        else{
+            window.location.href = "/detail?iddrink=" + index;
+        }
+        alert(availability);
+        //var el = $(this);
+        //el.parent().parent().hide();
+        //$("#detailView").show();
+        //$("#listButton").show();
+    });
+    /*
+	$("#listButton").click(function(){
+		$("#detailView").hide();
+		$("#listButton").hide();
+		$(".carousel").show();
+	});
+    */
+  </script>
+{% endblock scripts%}

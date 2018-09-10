@@ -1,0 +1,86 @@
+
+                    <form>
+                        <div class="row">
+						  <div class="input-field col s6">
+							  <input value="{{ingredient.name}}" id="changeName" type="text">
+							  <label class="active" for="changeName">Name</label>
+						  </div>
+                          <div class="input-field col s6">
+                            <select id="changePump">
+                                <option value="" {% if not ingredient.pump%}selected{% endif %}>No pump assigned</option>
+                                {%for pump in pumps%}
+                                <option value="{{loop.index-1}}" {% if pump == ingredient.pump %}selected{% endif %}>Pump {{loop.index}}</option>
+                                {% endfor %}
+                            </select>
+                              <label>Pump</label>
+                          </div>
+					  </div>
+                      <div class="row">
+                          <div class="col s12">
+					      <label for="percentageChange">Percentage of Alcohol (%)</label>
+					      <p id="percentageChange"></p>
+
+                          <label for="bottlesizeChange">Bottle Size (l)</label>
+					      <p id="bottlesizeChange"></p>
+                          </div>
+                      </div>
+                    </form>
+                      <button class="btn waves-effect waves-light black" type="submit" id="submitChange" name="action">Save
+                          <i class="material-icons right">save</i>
+                      </button>
+
+                      <script>
+                          $(document).ready(function(){
+                            $('select').formSelect();
+                          });
+
+                          $("#submitChange").click(function() {
+                              var idingredient = {{idingredient}}
+                              var name = $("#changeName").val();
+                              var pump = $("#changePump").val();
+                              var percentage = percentageChange_slider.noUiSlider.get();
+                              var bottlesize = bottlesizeChange_slider.noUiSlider.get();
+                              $.post('/submit/changeIngredient', {
+                                  idingredient: idingredient,
+                                  name: name,
+                                  pump: pump,
+                                  percentage: percentage,
+                                  bottlesize: bottlesize
+                              }).done(function(response) {
+                                  if (response['error'] == '0') {
+                                      //M.toast({html: 'Created new bottle!'});
+                                      $.redirect('/ingredients', {'toast': 'Changed {{ingredient.name}} bottle!'});
+                                  }
+                                  else M.toast({html: 'Something went wrong..'});
+                              });
+                          });
+
+                            var bottlesizeChange_slider = document.getElementById('bottlesizeChange');
+                            var percentageChange_slider = document.getElementById('percentageChange');
+                              noUiSlider.create(bottlesizeChange_slider, {
+                               start: {{ingredient.bottlesize/1000}},
+                               connect: true,
+                               step: 0.1,
+                               orientation: 'horizontal', // 'horizontal' or 'vertical'
+                               range: {
+                                 'min': 0,
+                                 'max': 3
+                               },
+                               format: wNumb({
+                                 decimals: 0
+                               })
+                              });
+                              noUiSlider.create(percentageChange_slider, {
+                               start: {{ingredient.percentage}},
+                               connect: true,
+                               step: 1,
+                               orientation: 'horizontal', // 'horizontal' or 'vertical'
+                               range: {
+                                 'min': 0,
+                                 'max': 100
+                               },
+                               format: wNumb({
+                                 decimals: 0
+                               })
+                              });
+                      </script>

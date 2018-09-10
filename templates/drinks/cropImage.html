@@ -1,0 +1,75 @@
+    <div class="row">
+        <div class="col s8">
+            <div>
+              <img class="jcrop-dark" width="500" id="image" src="{{ url_for('static', filename=path) }}">
+            </div>
+        </div>
+        <div class="col s4">
+          <h4 class="header">Crop Image</h4>
+            <form>
+                <div class="input-field">
+                    <input id="filename" type="text">
+                    <label for="filename">Filename (without extension)</label>
+                </div>
+
+            </form>
+          <button class="btn waves-effect waves-light black" id="cropButton" name="action">Crop
+              <i class="material-icons right">send</i>
+          </button>
+        </div>
+    </div>
+
+    <script>
+
+     $(document).ready(function(){
+         $('select').formSelect();
+     })
+
+    var jcrop_api;
+
+    img = document.getElementById("image");
+    img.onload = function(){
+        //alert(img.naturalWidth);
+        //alert(img.naturalHeight);
+        jcrop_api = $.Jcrop('#image',{
+            trueSize: [img.naturalWidth,img.naturalHeight],
+            aspectRatio: 1/1,
+            onSelect: updateCoords,
+            bgColor:     'white'
+        });
+    };
+
+    var coords = [];
+
+    function updateCoords(c)
+			{
+			    //alert("running");
+				$('#x').val(c.x);
+				$('#y').val(c.y);
+				$('#x2').val(c.x2);
+				$('#y2').val(c.y2);
+				$('#w').val(c.w);
+
+				coords = [c.x, c.y, c.x2, c.y2, c.w];
+			};
+
+    $("#cropButton").click(function(){
+        if (coords.length == 0) {
+            M.toast({html: "Select an area to cut out."});
+            return;
+        }
+        filename = $("#filename").val() + ".png";
+        $.post('/crop', {
+                x: coords[0],
+                y: coords[1],
+                x2: coords[2],
+                y2: coords[3],
+                w: coords[4],
+                path: "{{path}}",
+                name: filename
+            }).done(function(response) {
+            if (response['error'] == 0) $.redirect('/drinks', {'toast': 'Image successfully added!'});
+        });
+    });
+
+    </script>

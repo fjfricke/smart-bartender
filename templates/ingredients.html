@@ -1,0 +1,170 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<div class="container" id="detailView">
+	  <div class="row">
+		  <div class="col s12">
+			  <div class="row">
+				  <h3 class="header">Add a new bottle</h3>
+				  <form>
+					  <div class="row">
+						  <div class="input-field col s6">
+							  <input placeholder="Wodka" id="newName" type="text">
+							  <label for="name">Name</label>
+						  </div>
+                          <div class="input-field col s6">
+                            <select id="newPump">
+                                <option value="" selected>No pump assigned</option>
+                                {% for pump in pumps %}
+                                <option value="{{loop.index-1}}">Pump {{loop.index}}</option>
+                                {% endfor %}
+                            </select>
+                              <label>Pump</label>
+                          </div>
+					  </div>
+                      <div class="row">
+                          <div class="col s12">
+					      <label for="percentage">Percentage of Alcohol (%)</label>
+					      <p id="percentage"></p>
+
+                          <label for="bottlesize">Bottle Size (l)</label>
+					      <p id="bottlesize"></p>
+                          </div>
+                      </div>
+                  </form>
+                      <button class="btn waves-effect waves-light black" id="submitNew" name="action">Save
+                          <i class="material-icons right">save</i>
+                      </button>
+
+                  <h3 class="header">Change existing bottle</h3>
+                  <form>
+                      <div class="row">
+                          <div class="input-field col s6">
+                            <select id="chooseBottle">
+                                <option value="" disabled selected>Select Bottle</option>
+                                {% for ingredient in ingredients %}
+                                <option value="{{loop.index-1}}">{{ingredient.name}}</option>
+                                {% endfor %}
+                            </select>
+                          </div>
+                      </div>
+                  </form>
+
+                  <div id="changeBottleForm"></div>
+                  <!--<form id="changeBottleForm"></form>-->
+
+                  <h3 class="header">Delete existing bottle</h3>
+                  <h7 class="grey-text">Only possible for bottles not assigned to any drinks.</h7>
+                  <form>
+                      <div class="row">
+                          <div class="input-field col s6">
+                            <select id="deleteIngredient">
+                                <option value="" disabled selected>Select Bottle</option>
+                                {% for ingredient in ingredients%}
+                                <option value="{{loop.index-1}}" {% if not bar.pos_delete_ingredient(ingredient) %}disabled{% endif %}>{{ingredient.name}}</option>
+                                {% endfor %}
+                            </select>
+                          </div>
+                      </div>
+                  </form>
+                      <button class="btn waves-effect waves-light black" id="submitDelete" name="action">Delete
+                          <i class="material-icons right">delete</i>
+                      </button>
+
+			  </div>
+		  </div>
+
+  		</div>
+  </div>
+
+{% endblock content%}
+
+{% block scripts%}
+<script>
+
+    $(document).ready(function(){
+        var toast = '{{toast}}';
+        if (toast) M.toast({html: toast});
+    $('select').formSelect();
+  });
+
+    $("#chooseBottle").change(function(){
+
+        var idingredient = $('#chooseBottle').find(":selected").val();
+        $( "#changeBottleForm" ).load( "/ingredients/changeBottleForm",{
+            idingredient: idingredient
+        } );
+    });
+
+    $("#submitNew").click(function() {
+        var name = $("#newName").val();
+        var pump = $("#newPump").val();
+        var percentage = percentage_slider.noUiSlider.get();
+        var bottlesize = bottlesize_slider.noUiSlider.get();
+        if (name == "") {
+            M.toast({html: 'You need to specify a name.'});
+            return;
+        }
+        //alert(name + " " + pump + " " + percentage + " " + bottlesize);
+        $.post('/submit/newIngredient', {
+                name: name,
+                pump: pump,
+                percentage: percentage,
+                bottlesize: bottlesize
+            }).done(function(response) {
+            //$(destElem).text(response['text'])
+            if (response['error'] == '0') {
+                //M.toast({html: 'Created new bottle!'});
+                $.redirect('/ingredients', {'toast': 'Created new bottle!'});
+            }
+            else M.toast({html: 'Something went wrong..'});
+        });
+    });
+
+    $("#submitDelete").click(function() {
+        var idingredient = $("#deleteIngredient").val();
+        $.post('/submit/deleteIngredient', {
+                idingredient: idingredient
+            }).done(function(response) {
+            if (response['error'] == '0') {
+                //M.toast({html: 'Created new bottle!'});
+                $.redirect('/ingredients', {'toast': 'Deleted bottle!'});
+            }
+            else M.toast({html: 'Something went wrong..'});
+        });
+    });
+
+
+var bottlesize_slider = document.getElementById('bottlesize');
+var percentage_slider = document.getElementById('percentage');
+  noUiSlider.create(bottlesize_slider, {
+   start: 0,
+   connect: true,
+   step: 0.1,
+   orientation: 'horizontal', // 'horizontal' or 'vertical'
+   range: {
+     'min': 0,
+     'max': 3
+   },
+   format: wNumb({
+     decimals: 0
+   })
+  });
+  noUiSlider.create(percentage_slider, {
+   start: 0,
+   connect: true,
+   step: 1,
+   orientation: 'horizontal', // 'horizontal' or 'vertical'
+   range: {
+     'min': 0,
+     'max': 100
+   },
+   format: wNumb({
+     decimals: 0
+   })
+  });
+
+</script>
+
+{% endblock scripts %}
