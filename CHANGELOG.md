@@ -8,3 +8,4 @@ All notable changes to this project will be documented in this file.
 - Initial release
 
 [0.2.0]: https://github.com/fjfricke/smart-bartender/commits/master
+[0.2.1]: 6b374fa682c85079bcfddbedbe263aa33c044b30
