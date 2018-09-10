@@ -12,8 +12,8 @@ from threading import Thread
 
 #import bar as bar
 
-from bar2 import Bar
-from bar2 import reload_config
+from bar import Bar
+from bar import reload_config
 
 UPLOAD_FOLDER = os.path.dirname(__file__) + '/static/pictures/temp/'
 PICTURE_FOLDER = os.path.dirname(__file__) + '/static/pictures/'
@@ -22,46 +22,6 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-'''
-#THIS IS THE BARTENDER SECTION
-
-pump1 = bar.Pump(1, 11)
-pump2 = bar.Pump(2, 14, flowrate=1000)
-pump3 = bar.Pump(3, 17)
-pump4 = bar.Pump(4, 23)
-pump5 = bar.Pump(5, 25)
-
-wodka = bar.Ingredient(name='Wodka', percentage=45, bottlesize=700)
-wodka.assignPump(pump1)
-
-gingerbeer = bar.Ingredient(name='Ginger Beer', percentage=0, bottlesize=500)
-gingerbeer.assignPump(pump2)
-
-gin = bar.Ingredient(name="Gin", percentage=45, bottlesize=700)
-gin.assignPump(pump4)
-
-redbull = bar.Ingredient(name='Red Bull', percentage=0, bottlesize=200)
-redbull.assignPump(pump3)
-
-tonic = bar.Ingredient(name='Tonic Water', percentage=0, bottlesize=500)
-tonic.assignPump(pump5)
-
-single_moscowMule = bar.Version(shortname='single', ingredients=[wodka, gingerbeer], proportions=[40,60], glassize=200)
-double_moscowMule = bar.Version(shortname='double', ingredients=[wodka, gingerbeer], proportions=[50,50], glassize=200)
-big_moscowMule = bar.Version(shortname='big', ingredients=[wodka, gingerbeer], proportions=[60,40], glassize=8000)
-
-single_redBull = bar.Version(shortname='single', ingredients=[wodka, redbull], proportions=[30,70], glassize=200)
-
-single_gintonic = bar.Version(shortname='single', ingredients=[gin, tonic], proportions=[30,70], glassize=200)
-
-moscowMule = bar.Drink(name='Moscow Mule', type='Longdrink', picture='moscowMule.png', description='This is a drink from Moscow.', versions=[single_moscowMule, double_moscowMule, big_moscowMule])
-wodkaBull = bar.Drink(name='Wodka Bull', type='Longdrink', picture='wodkaEnergy.png', description='This is a drink from Austria.', versions=[single_redBull])
-gintonic = bar.Drink(name='Gin Tonic', type='Longdrink', picture='ginTonic.png', description='This is a fancy hyped drink.', versions=[single_gintonic])
-
-ingredients = [wodka, gingerbeer, gin, redbull, tonic]
-drinks = [moscowMule, wodkaBull, gintonic]
-#BARTENDER SECTION END
-'''
 
 '''BARTENDER2 SECTION'''
 '''
