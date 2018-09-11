@@ -10,16 +10,15 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from threading import Thread
 
-#import bar as bar
-
 from bar import Bar
-from bar import reload_config
 
 UPLOAD_FOLDER = os.path.dirname(__file__) + '/static/pictures/temp/'
 PICTURE_FOLDER = os.path.dirname(__file__) + '/static/pictures/'
 rel_folder = 'pictures/temp/'
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg', 'gif'])
 
+print(PICTURE_FOLDER)
+print(__name__)
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
@@ -78,7 +77,8 @@ bar.save_config('config')
 
 '''BARTENDER2 SECTION END'''
 
-bar = reload_config('config')
+# bar = reload_config('config')
+bar = Bar(folder='config')
 
 @app.route("/")
 def startpage():
@@ -422,7 +422,8 @@ def startChrome():
     driver.get("http://127.0.0.1:5000")
 
 if __name__ == "__main__":
-    t = Thread(target=startChrome)
-    t.start()
-    app.run(debug=False)
+    #t = Thread(target=startChrome)
+    #t.start()
+    #app.run(debug=True)
     #app.run(host='192.168.0.77', port=5000, debug=False)
+    app.run(host='10.2.211.39', port=5000, debug=False)

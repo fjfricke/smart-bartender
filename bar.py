@@ -1,7 +1,7 @@
 import time
 import sys
-import RPi.GPIO as GPIO
-#from RPi import GPIO
+#import RPi.GPIO as GPIO
+from RPi import GPIO
 import json
 from threading import Thread
 import traceback
@@ -191,12 +191,15 @@ class Bar:
             GPIO.output(self.pin, GPIO.HIGH)
             print('Stop cleaning pin {} ...'.format(self.pin))
 
-    def __init__(self):
+    def __init__(self, folder:str = None):
         # check if saved drinks, ingredients, pumps, versions
         # otherwise create empty objects
         self.drinks = []
         self.ingredients = []
         self.pumps = []
+        if folder:
+            print("Reloading config from json..")
+            self.reload_config(folder)
 
     def create_drink(self, name: str, type: str, picture: str, description: str):
         drink = self.Drink(name, type, picture, description)
@@ -207,7 +210,7 @@ class Bar:
 
     def create_ingredient(self, name: str, percentage: float, bottlesize: float, remaining: float = None, pump: int = None):
         ingredient = self.Ingredient(name, percentage, bottlesize, remaining)
-        if pump:
+        if pump != None:
             ingredient.assignPump(self.pumps[pump])
         self.ingredients.append(ingredient)
 
@@ -245,31 +248,89 @@ class Bar:
         return 0
 
     def save_config(self, folder):
-        with open(folder + '/config.obj', 'wb') as filehandler:
-            pickle.dump(self, filehandler)
-        '''
-        filehandler = open(folder + '/drinks.obj', 'wb')
-        pickle.dump(self.drinks, filehandler)
-        filehandler = open(folder + '/ingredients.obj', 'wb')
-        pickle.dump(self.ingredients, filehandler)
-        filehandler = open(folder + '/pumps.obj', 'wb')
-        pickle.dump(self.pumps, filehandler)
-        '''
+
+        json_pumps = []
+        json_ingredients = []
+        json_drinks=[]
+
+        for pump in self.pumps:
+            json_pumps.append({
+                "pin": pump.pin,
+                "flowrate": pump.flowrate
+            })
+        for ing in self.ingredients:
+            dic = {
+                "name": ing.name,
+                "percentage": ing.percentage,
+                "bottlesize": ing.bottlesize,
+                "remaining": ing.remaining,
+                "pump": self.pumps.index(ing.pump)
+            }
+            json_ingredients.append(dic)
+        for drink in self.drinks:
+            dic = {
+                "name": drink.name,
+                "type": drink.type,
+                "picture": drink.picture,
+                "description": drink.description
+            }
+            versions = []
+            for version in drink.versions:
+                vdic = {
+                    "shortname": version.shortname,
+                    "glassize": version.glassize,
+                    "proportions": version.proportions
+                }
+                ingredients = []
+                for ing in version.ingredients:
+                    ingredients.append(self.ingredients.index(ing))
+                vdic["ingredients"] = ingredients
+                versions.append(vdic)
+            dic["versions"] = versions
+            json_drinks.append(dic)
+        with open(folder + "/pumps.json", "w") as write_file:
+            json.dump(json_pumps, write_file, indent=4, sort_keys=True)
+        with open(folder + "/ingredients.json", "w") as write_file:
+            json.dump(json_ingredients, write_file, indent=4, sort_keys=True)
+        with open(folder + "/drinks.json", "w") as write_file:
+            json.dump(json_drinks, write_file, indent=4, sort_keys=True)
+
 
     def reload_config(self, folder):
-        pass
-        '''
-        filehandler = open(folder + '/drinks.obj', 'rb')
-        self.drinks = pickle.load(filehandler)
-        filehandler = open(folder + '/ingredients.obj', 'rb')
-        self.ingredients = pickle.load(filehandler)
-        filehandler = open(folder + '/pumps.obj', 'rb')
-        self.pumps = pickle.load(filehandler)
-        '''
+        try:
+            pumps = []
+            ingredients = []
+            drinks = []
 
-    def __del__(self):
-        self.save_config('config')
-
-def reload_config(folder):
-    with open(folder + '/config.obj', 'rb') as filehandler:
-        return pickle.load(filehandler)
+            with open(folder + "/pumps.json", "r") as read_file:
+                pumps = json.load(read_file)
+            print(pumps)
+            with open(folder + "/ingredients.json", "r") as read_file:
+                ingredients = json.load(read_file)
+            print(ingredients)
+            with open(folder + "/drinks.json", "r") as read_file:
+                drinks = json.load(read_file)
+            print(drinks)
+            print("Reloading pumps..")
+            for pump in pumps:
+                self.create_pump(pin=pump["pin"], flowrate=pump["flowrate"])
+            print("Reloading bottles..")
+            for ing in ingredients:
+                self.create_ingredient(name=ing["name"], percentage=ing["percentage"], bottlesize=ing["bottlesize"],
+                                       remaining=ing["remaining"], pump=ing["pump"])
+            print("Reloading drinks..")
+            for iddrink, drink in enumerate(drinks):
+                self.create_drink(name=drink["name"], type=drink["type"],
+                                  picture=drink["picture"], description=drink["description"])
+                versions = drink["versions"]
+                for version in versions:
+                    version_ings = []
+                    for ingid in version["ingredients"]:
+                        version_ings.append(self.ingredients[ingid])
+                    self.drinks[iddrink].create_version(shortname=version["shortname"], ingredients=version_ings,
+                                                        proportions=version["proportions"], glassize=version["glassize"])
+            print("Reloading done!")
+            return 0
+        except:
+            print("Could not reload from json. Something went wrong..")
+            return 1

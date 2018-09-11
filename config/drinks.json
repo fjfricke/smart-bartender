@@ -1,0 +1,106 @@
+[
+    {
+        "description": "This is a drink from Moscow.",
+        "name": "Moscow Mule",
+        "picture": "moscowMule.png",
+        "type": "Longdrink",
+        "versions": [
+            {
+                "glassize": 200,
+                "ingredients": [
+                    0,
+                    1
+                ],
+                "proportions": [
+                    40,
+                    60
+                ],
+                "shortname": "single"
+            },
+            {
+                "glassize": 200,
+                "ingredients": [
+                    0,
+                    1
+                ],
+                "proportions": [
+                    50,
+                    50
+                ],
+                "shortname": "double"
+            },
+            {
+                "glassize": 8000,
+                "ingredients": [
+                    0,
+                    1
+                ],
+                "proportions": [
+                    60,
+                    40
+                ],
+                "shortname": "big"
+            }
+        ]
+    },
+    {
+        "description": "This is a drink from Austria.",
+        "name": "Wodka Bull",
+        "picture": "wodkaEnergy.png",
+        "type": "Longdrink",
+        "versions": [
+            {
+                "glassize": 200,
+                "ingredients": [
+                    0,
+                    3
+                ],
+                "proportions": [
+                    30,
+                    70
+                ],
+                "shortname": "single"
+            }
+        ]
+    },
+    {
+        "description": "This is a fancy hyped drink.",
+        "name": "Gin Tonic",
+        "picture": "ginTonic.png",
+        "type": "Longdrink",
+        "versions": [
+            {
+                "glassize": 200,
+                "ingredients": [
+                    2,
+                    4
+                ],
+                "proportions": [
+                    30,
+                    70
+                ],
+                "shortname": "single"
+            }
+        ]
+    },
+    {
+        "description": "This is Vreni's and Felix' drink \u2764\ufe0f.",
+        "name": "Milch 43",
+        "picture": "milch43.png",
+        "type": "Longdrink",
+        "versions": [
+            {
+                "glassize": 200,
+                "ingredients": [
+                    5,
+                    6
+                ],
+                "proportions": [
+                    30,
+                    70
+                ],
+                "shortname": "single"
+            }
+        ]
+    }
+]

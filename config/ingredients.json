@@ -1,0 +1,51 @@
+[
+    {
+        "bottlesize": 700,
+        "name": "Wodka",
+        "percentage": 45,
+        "pump": 0,
+        "remaining": 640.0
+    },
+    {
+        "bottlesize": 500,
+        "name": "Ginger Beer",
+        "percentage": 0,
+        "pump": 1,
+        "remaining": 500
+    },
+    {
+        "bottlesize": 700,
+        "name": "Gin",
+        "percentage": 45,
+        "pump": 3,
+        "remaining": 700
+    },
+    {
+        "bottlesize": 200,
+        "name": "Red Bull",
+        "percentage": 0,
+        "pump": 2,
+        "remaining": 200
+    },
+    {
+        "bottlesize": 500,
+        "name": "Tonic Water",
+        "percentage": 0,
+        "pump": 4,
+        "remaining": 500
+    },
+    {
+        "bottlesize": 700,
+        "name": "Liqueur 43",
+        "percentage": 31,
+        "pump": 5,
+        "remaining": 700
+    },
+    {
+        "bottlesize": 1000,
+        "name": "Milch",
+        "percentage": 0,
+        "pump": 6,
+        "remaining": 1000
+    }
+]

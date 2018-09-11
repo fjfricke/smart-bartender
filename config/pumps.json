@@ -1,0 +1,30 @@
+[
+    {
+        "flowrate": 500,
+        "pin": 11
+    },
+    {
+        "flowrate": 1000,
+        "pin": 14
+    },
+    {
+        "flowrate": 500,
+        "pin": 17
+    },
+    {
+        "flowrate": 500,
+        "pin": 23
+    },
+    {
+        "flowrate": 500,
+        "pin": 25
+    },
+    {
+        "flowrate": 500,
+        "pin": 27
+    },
+    {
+        "flowrate": 500,
+        "pin": 32
+    }
+]
