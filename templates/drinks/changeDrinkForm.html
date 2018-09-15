@@ -3,15 +3,15 @@
                     <form action="/submit/changeDrink" enctype="multipart/form-data" method="post">
                         <input hidden="true" value="{{iddrink}}" name="iddrink">
                         <div class="row">
-						  <div class="input-field col s6">
+						  <div class="input-field col s6 keyboard">
 							  <input id="changeName" name="name" value="{{drink.name}}" type="text">
 							  <label class="active" for="changeName">Name</label>
 						  </div>
-                          <div class="input-field col s6">
+                          <div class="input-field col s6 keyboard">
                             <input id="changeType" name="type" value="{{drink.type}}" type="text">
 							  <label class="active" for="changeType">Type</label>
                           </div>
-                          <div class="input-field col s12">
+                          <div class="input-field col s12 keyboard">
                             <input id="changeDesc" name="desc" value="{{drink.description}}" type="text">
 							  <label class="active" for="changeDesc">Description</label>
                           </div>
@@ -33,11 +33,11 @@
                     <form action="/submit/newVersion" enctype="multipart/form-data" method="post">
                       <input hidden="true" value="{{iddrink}}" name="iddrink">
 					  <div class="row" id="addIngNewForm">
-						  <div class="input-field col s6">
+						  <div class="input-field col s6 keyboard">
 							  <input placeholder="e.g. single, double, shot" id="newShortname" name="shortname" type="text" data-length="10">
 							  <label class="active" for="newShortname">Abbreviation</label>
 						  </div>
-                          <div class="input-field col s6">
+                          <div class="input-field col s6 keyboard">
                             <input placeholder="200" id="newSize" name="size" type="number">
 							  <label class="active" for="newSize">Glas size (ml)</label>
                           </div>
@@ -50,8 +50,8 @@
                             </select>
                               <label>Bottle</label>
                           </div>
-                          <div class="input-field col s6">
-                            <input placeholder="20" name="prop[]" type="number">
+                          <div class="input-field col s6 keyboard">
+                            <input id="newProp" placeholder="20" name="prop[]" type="number">
 							  <label class="active">Proportion (%)</label>
                           </div>
 					  </div>
@@ -103,6 +103,7 @@
                           var addNewCounter = 0;
                           $(function() {
                               $("#addIngNew").click(function(e) {
+                                  var textID = "newProp" + addNewCounter;
                                   e.preventDefault();
 
                                   $("#addIngNewForm").append('<div class="addNew' + addNewCounter + ' input-field col s6">' +
@@ -113,9 +114,10 @@
                                       '<label>Bottle</label>' +
                                       '</div>');
                                   $("#addIngNewForm").append('<div class="addNew' + addNewCounter + ' input-field col s6">' +
-                                      '<input placeholder="20" name="prop[]" type="number">' +
+                                      '<input id="' + textID + '" placeholder="20" name="prop[]" type="number">' +
                                       '<label class="active">Proportion (%)</label>' +
                                       '</div>');
+                                  $('#'+textID).keyboard({type:'tel'});
                                   addNewCounter += 1;
 
                                   $('select').formSelect();
@@ -141,6 +143,15 @@
                           });
 
                           $(document).ready(function(){
+                              {% if isRpi %}
+                            $('#changeName').keyboard();
+                            $('#changeType').keyboard();
+                            $('#changeDesc').keyboard();
+                            $('#newShortname').keyboard();
+                            $('#newSize').keyboard({type:'tel'});
+                            $('#newProp').keyboard({type:'tel'});
+                              {% endif %}
+
                             $('select').formSelect();
                           });
                       </script>

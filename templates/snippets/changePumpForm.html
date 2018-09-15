@@ -1,7 +1,7 @@
 
                     <form>
                         <div class="row">
-						  <div class="input-field col s6">
+						  <div class="input-field col s6 keyboard">
 							  <input value="{{pump.pin}}" id="changePin" type="text">
 							  <label class="active" for="changeName">GPIO Pin</label>
 						  </div>
@@ -19,6 +19,9 @@
 
                       <script>
                           $(document).ready(function(){
+                              {% if isRpi %}
+                            $('#changePin').keyboard({type:'tel'});
+                              {% endif %}
                             $('select').formSelect();
                           });
 

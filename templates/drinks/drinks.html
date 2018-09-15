@@ -1,7 +1,7 @@
 <link href="{{ url_for('static', filename='css/cropper/jquery.Jcrop.css') }}" type="text/css" rel="stylesheet"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jqbtk.css') }}"/>
 
 {% extends "layout.html" %}
-
 
 {% block content %}
 <div class="container" id="detailView">
@@ -15,15 +15,15 @@
                  <h4 class="header"> Add new drink</h4>
                   <form action="/submit/newDrink" enctype="multipart/form-data" method="post">
 					  <div class="row">
-						  <div class="input-field col s6">
+						  <div class="input-field col s6 keyboard">
 							  <input placeholder="Wodka Mule" id="newName" name="name" type="text">
 							  <label for="newName">Name</label>
 						  </div>
-                          <div class="input-field col s6">
+                          <div class="input-field col s6 keyboard">
                             <input placeholder="Longdrink" id="newType" name="type" type="text">
 							  <label for="newType">Type</label>
                           </div>
-                          <div class="input-field col s12">
+                          <div class="input-field col s12 keyboard">
                             <input placeholder="This is a drink from Moscow." id="newDesc" name="desc" type="text">
 							  <label for="newDesc">Description</label>
                           </div>
@@ -104,6 +104,11 @@
     });
 
     $(window).load(function(){
+        {% if isRpi %}
+        $('#newName').keyboard();
+        $('#newType').keyboard();
+        $('#newDesc').keyboard();
+        {% endif %}
         if ("{{path}}" == "") {
             $("#cropDiv").load("/drinks/chooseImage");
         }
@@ -116,5 +121,7 @@
     });
 
 </script>
-
+    <script src="{{ url_for('static', filename='js/bootstrap/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jqbtk.js') }}"></script>
 {% endblock scripts %}

@@ -79,10 +79,18 @@ bar.save_config('config')
 
 # bar = reload_config('config')
 bar = Bar(folder='config')
+myIP = '127.0.0.1'
+
+def isRpi():
+    if request.environ.get('HTTP_X_REAL_IP', request.remote_addr) == myIP:
+        return True
+    return False
 
 @app.route("/")
 def startpage():
     bar.save_config('config')
+    if request.environ.get('HTTP_X_REAL_IP', request.remote_addr) == myIP:
+        print('This is the Raspberry device!')
     return render_template('index.html', drinks=bar.drinks)
 
 @app.route("/detail", methods=['GET'])
@@ -108,12 +116,13 @@ def ingredientsview():
         toast = request.form.get('toast')
     else:
         toast = ''
-    return render_template('/ingredients.html', ingredients=bar.ingredients, pumps=bar.pumps, bar=bar, toast=toast)
+    print(isRpi())
+    return render_template('/ingredients.html', ingredients=bar.ingredients, pumps=bar.pumps, bar=bar, toast=toast, isRpi=isRpi())
 
 @app.route("/ingredients/changeBottleForm", methods=['POST'])
 def changeBottleFormSnippet():
     idingredient = int(request.form.get('idingredient'))
-    return render_template('snippets/changeBottleForm.html', idingredient=idingredient, ingredient=bar.ingredients[idingredient], pumps=bar.pumps, bar=bar)
+    return render_template('snippets/changeBottleForm.html', idingredient=idingredient, ingredient=bar.ingredients[idingredient], pumps=bar.pumps, bar=bar, isRpi=isRpi())
 
 @app.route("/submit/newIngredient", methods=['POST'])
 def submitNewIngredient():
@@ -163,12 +172,12 @@ def pumpsview():
         toast = request.form.get('toast')
     else:
         toast = ''
-    return render_template('/pumps.html', pumps=bar.pumps, bar=bar, toast=toast)
+    return render_template('/pumps.html', pumps=bar.pumps, bar=bar, toast=toast, isRpi=isRpi())
 
 @app.route("/pumps/changePumpForm", methods=['POST'])
 def changePumpFormSnippet():
     idpump = int(request.form.get('idpump'))
-    return render_template('snippets/changePumpForm.html', idpump=idpump, pump=bar.pumps[idpump], bar=bar)
+    return render_template('snippets/changePumpForm.html', idpump=idpump, pump=bar.pumps[idpump], bar=bar, isRpi=isRpi())
 
 @app.route("/submit/newPump", methods=['POST'])
 def submitNewPump():
@@ -219,11 +228,11 @@ def drinks(toast=''):
         if not (fichier.endswith(".png")):
             filelist.remove(fichier)
     print(filelist)
-    return render_template('/drinks/drinks.html', toast=toast, pictures=filelist, drinks=bar.drinks)
+    return render_template('/drinks/drinks.html', toast=toast, pictures=filelist, drinks=bar.drinks, isRpi=isRpi())
 
 @app.route("/drinks/chooseImage")
 def cropperChooseImage():
-    return render_template('drinks/chooseImage.html')
+    return render_template('drinks/chooseImage.html', isRpi=isRpi())
 
 def allowed_file(filename):
     return '.' in filename and \
@@ -295,7 +304,30 @@ def changeDrinkFormSnippet():
         if not (fichier.endswith(".png")):
             filelist.remove(fichier)
 
-    return render_template('drinks/changeDrinkForm.html', iddrink=iddrink, drink=bar.drinks[iddrink], pictures=filelist, bar=bar)
+    return render_template('drinks/changeDrinkForm.html', iddrink=iddrink, drink=bar.drinks[iddrink], pictures=filelist, bar=bar, isRpi=isRpi())
+
+@app.route("/submit/changeDrink", methods=['POST'])
+def submitChangeDrink():
+    try:
+        iddrink = int(request.form.get('iddrink'))
+        name = request.form.get('name')
+        type = request.form.get('type')
+        desc = request.form.get('desc')
+        pic = request.form.get('picture')
+
+        if name == '' or type == '' or pic == '':
+            raise Exception()
+
+        print(name + " " + type + " " + desc + " " + pic)
+
+        bar.drinks[iddrink].name = name
+        bar.drinks[iddrink].type = type
+        bar.drinks[iddrink].picture = pic
+        bar.drinks[iddrink].description = desc
+        bar.save_config('config')
+        return drinks('Successfully changed drink!')
+    except:
+        return drinks('Something went wrong..')
 
 @app.route("/submit/newVersion", methods=['POST'])
 def submitNewVersion():
@@ -425,5 +457,6 @@ if __name__ == "__main__":
     #t = Thread(target=startChrome)
     #t.start()
     #app.run(debug=True)
-    #app.run(host='192.168.0.77', port=5000, debug=False)
-    app.run(host='10.2.211.39', port=5000, debug=False)
+    myIP = '10.2.212.43'
+    app.run(host=myIP, port=5000, debug=True)
+    #app.run(host='10.2.211.39', port=5000, debug=True)

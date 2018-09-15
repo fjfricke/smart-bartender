@@ -1,7 +1,7 @@
 
                     <form>
                         <div class="row">
-						  <div class="input-field col s6">
+						  <div class="input-field col s6 keyboard">
 							  <input value="{{ingredient.name}}" id="changeName" type="text">
 							  <label class="active" for="changeName">Name</label>
 						  </div>
@@ -31,6 +31,9 @@
 
                       <script>
                           $(document).ready(function(){
+                              {% if isRpi %}
+                            $('#changeName').keyboard();
+                              {% endif %}
                             $('select').formSelect();
                           });
 

@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/jqbtk.css') }}">
 {% extends "layout.html" %}
 
 {% block content %}
@@ -9,7 +10,7 @@
 				  <h3 class="header">Add a new bottle</h3>
 				  <form>
 					  <div class="row">
-						  <div class="input-field col s6">
+						  <div class="input-field col s6 keyboard">
 							  <input placeholder="Wodka" id="newName" type="text">
 							  <label for="name">Name</label>
 						  </div>
@@ -84,10 +85,13 @@
 <script>
 
     $(document).ready(function(){
-        var toast = '{{toast}}';
+        {% if isRpi %}
+        $('#newName').keyboard();
+        {% endif %}
+        let toast = '{{toast}}';
         if (toast) M.toast({html: toast});
-    $('select').formSelect();
-  });
+        $('select').formSelect();
+    });
 
     $("#chooseBottle").change(function(){
 
@@ -166,5 +170,10 @@ var percentage_slider = document.getElementById('percentage');
   });
 
 </script>
+
+    <script src="{{ url_for('static', filename='js/bootstrap/popper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jqbtk.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/materialize.js') }}"></script>
 
 {% endblock scripts %}

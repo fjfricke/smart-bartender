@@ -1,10 +1,11 @@
+    {%  if not isRpi %}
     <div class="row">
-        <div class="col s6">
+        <div class="col s5">
             <div>
-              <img width="300" class="materialboxed" id="image" src="{{ url_for('static', filename='pictures/placeholder.png') }}">
+              <img width="100%" class="materialboxed bottom" id="image" src="{{ url_for('static', filename='pictures/placeholder.png') }}">
             </div>
           </div>
-        <div class="col s6">
+        <div class="col s7">
           <h4 class="header">Upload Image</h4>
             <form action="/drinks/cropImage" enctype="multipart/form-data" method="post">
                 <div class="file-field input-field">
@@ -22,3 +23,11 @@
             </form>
         </div>
     </div>
+    {% else %}
+    <h7 class="header grey-text">Uploading images is not possible on the bartender screen. Please connect to your wifi and use your smartphone, tablet or computer.</h7>
+    {% endif %}
+<script>
+$(document).ready(function(){
+    $('.materialboxed').materialbox();
+})
+</script>
