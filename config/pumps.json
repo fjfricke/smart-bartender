@@ -1,15 +1,15 @@
 [
     {
         "flowrate": 500,
-        "pin": 11
+        "pin": 17
     },
     {
         "flowrate": 1000,
-        "pin": 14
+        "pin": 27
     },
     {
         "flowrate": 500,
-        "pin": 17
+        "pin": 18
     },
     {
         "flowrate": 500,
@@ -21,7 +21,7 @@
     },
     {
         "flowrate": 500,
-        "pin": 27
+        "pin": 28
     },
     {
         "flowrate": 500,
