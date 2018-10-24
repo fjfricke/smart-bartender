@@ -1,4 +1,4 @@
 RPi.GPIO
 Flask
-selenium
+# selenium
 Pillow
