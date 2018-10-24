@@ -454,9 +454,9 @@ def startChrome():
     driver.get("http://127.0.0.1:5000")
 
 if __name__ == "__main__":
-    #t = Thread(target=startChrome)
-    #t.start()
+    t = Thread(target=startChrome)
+    t.start()
     #app.run(debug=True)
-    myIP = '10.2.212.43'
+    #myIP = '10.2.212.43'
     app.run(host=myIP, port=5000, debug=True)
     #app.run(host='10.2.211.39', port=5000, debug=True)
